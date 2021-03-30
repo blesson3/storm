@@ -1,0 +1,31 @@
+= storm
+
+```
+$ storm --help
+storm 
+a cli used for general hacking shortcuts and data processing
+
+USAGE:
+    storm [FLAGS] [OPTIONS] [SUBCOMMAND]
+
+FLAGS:
+    -h, --help       Prints help information
+    -v               Sets the level of verbosity
+    -V, --version    Prints version information
+
+OPTIONS:
+        --scripts-dir <scripts-dir>     [default: /Users/anon/Desktop/repos/0-hacking/storm/scripts]
+
+SUBCOMMANDS:
+    help      Prints this message or the help of the given subcommand(s)
+    script
+```
+
+== workflows
+
+=== api
+
+summary: outputs several text files from zap history related to a specific scoped api.
+
+.output:
+- unique-endpoints.txt
