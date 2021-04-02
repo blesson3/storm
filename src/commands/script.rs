@@ -3,14 +3,6 @@ use std::path::Path;
 use std::process::Command;
 use std::{fs, process::exit};
 
-// fn get_built_in_scripts_list() -> Vec<String>
-// {
-//     return env!("BUILTIN_SCRIPTS_LIST")
-//         .split(",")
-//         .map(|p| p.to_owned())
-//         .collect();
-// }
-
 fn get_script_filenames(scripts_dir: &str) -> Vec<String>
 {
     fs::read_dir(scripts_dir)
