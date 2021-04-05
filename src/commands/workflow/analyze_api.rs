@@ -11,17 +11,20 @@ pub fn run(base_url: &str)
         .view_messages(Some(base_url.into()), None, None)
         .unwrap();
 
-    let uri_regex = Regex::new(r"^\w+\s([^ ?]+)").unwrap();
+    let uri_regex = Regex::new(r"^(\w+)\s([^ ?]+)").unwrap();
 
     let mut unique_endpoints = vec![];
     for message in messages.messages
     {
         let captures = uri_regex.captures(&message.request_header).unwrap();
-        let endpoint = captures[1].to_string();
+        let method = captures[1].to_string();
+        let endpoint = captures[2].to_string();
 
-        if !unique_endpoints.contains(&endpoint)
+        let endpoint_full = format!("{} {}", method, endpoint);
+
+        if !unique_endpoints.contains(&endpoint_full)
         {
-            unique_endpoints.push(endpoint);
+            unique_endpoints.push(endpoint_full);
         }
     }
 
