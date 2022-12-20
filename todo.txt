@@ -3,3 +3,4 @@
   subcmd: `zap context-include`
   subcmd: `zap context-include`
   subcmd: `workflows find-params` to find all unique params per endpoint
+  workflow: retrieve auth tokens from auth requests for specific users
