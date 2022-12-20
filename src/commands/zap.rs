@@ -16,7 +16,11 @@ fn cmd_display(cmd: &Command) -> String
     )
 }
 
-pub fn start_zap_and_load_session(zap_jar_path: &str, session_file: Option<&str>)
+pub fn start_zap_and_load_session(
+    zap_jar_path: &str,
+    session_file: Option<&str>,
+    should_launch_in_foreground: bool,
+)
 {
     let mut cmd = Command::new("/usr/bin/java");
 
@@ -32,14 +36,27 @@ pub fn start_zap_and_load_session(zap_jar_path: &str, session_file: Option<&str>
 
     info!("$ {}", cmd_display(&cmd));
 
-    // finishing running the session
-    cmd.stdout(Stdio::null())
-        .stderr(Stdio::null())
-        .spawn()
-        .unwrap();
+    if should_launch_in_foreground
+    {
+        // finishing running the session (foreground)
+        info!("foreground");
+        cmd.stdout(Stdio::inherit())
+            .stderr(Stdio::inherit())
+            .output()
+            .unwrap();
+    }
+    else
+    {
+        // finishing running the session (background)
+        info!("background");
+        cmd.stdout(Stdio::null())
+            .stderr(Stdio::null())
+            .spawn()
+            .unwrap();
+    }
 }
 
-pub fn start_zap(zap_jar_path: &str, ignore_session_files: bool)
+pub fn start_zap(zap_jar_path: &str, ignore_session_files: bool, should_launch_in_foreground: bool)
 {
     // try to auto find the session files unless `ignore_session_files` is present
     if !ignore_session_files
@@ -81,10 +98,14 @@ pub fn start_zap(zap_jar_path: &str, ignore_session_files: bool)
         }
 
         // exactly one session file found
-        start_zap_and_load_session(zap_jar_path, Some(session_files[0]))
+        start_zap_and_load_session(
+            zap_jar_path,
+            Some(session_files[0]),
+            should_launch_in_foreground,
+        )
     }
     else
     {
-        start_zap_and_load_session(zap_jar_path, None)
+        start_zap_and_load_session(zap_jar_path, None, should_launch_in_foreground)
     }
 }

@@ -102,11 +102,18 @@ fn main()
                     ),
                 )
                 .subcommand(
-                    SubCommand::with_name("start").arg(
-                        Arg::with_name("ignore-session-files")
-                            .long("ignore-session-files")
-                            .short("i"),
-                    ),
+                    SubCommand::with_name("start")
+                        .arg(
+                            Arg::with_name("ignore-session-files")
+                                .long("ignore-session-files")
+                                .short("i"),
+                        )
+                        .arg(
+                            Arg::with_name("foreground")
+                                .long("foreground")
+                                .short("f")
+                                .help("starts zap in foreground attached to storm process"),
+                        ),
                 ),
         )
         .get_matches();
@@ -138,13 +145,18 @@ fn main()
             let session_file = start_and_load_session_matches.args["session-file"].vals[0]
                 .to_str()
                 .unwrap();
-            commands::zap::start_zap_and_load_session(zap_jar_path, Some(session_file));
+            commands::zap::start_zap_and_load_session(zap_jar_path, Some(session_file), false);
         }
         else if let Some(start_matches) = zap_matches.subcommand_matches("start")
         {
             let zap_jar_path = zap_matches.args["zap-jar-path"].vals[0].to_str().unwrap();
             let ignore_session_files = start_matches.args.get("ignore-session-files");
-            commands::zap::start_zap(zap_jar_path, ignore_session_files.is_some());
+            let should_launch_in_foreground = start_matches.args.get("foreground");
+            commands::zap::start_zap(
+                zap_jar_path,
+                ignore_session_files.is_some(),
+                should_launch_in_foreground.is_some(),
+            );
         }
     }
 }
